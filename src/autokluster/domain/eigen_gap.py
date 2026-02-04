@@ -2,21 +2,21 @@ import numpy as np
 from numpy.typing import NDArray
 
 
-def findOptimalK(
+def find_optimal_k(
     eigenvalues: NDArray[np.float64],
-    minK: int = 2,
-    maxK: int = 50,
-    windowSize: int = 5,
+    min_k: int = 2,
+    max_k: int = 50,
+    window_size: int = 5,
     epsilon: float = 1e-10,
 ) -> int:
     raise NotImplementedError
 
 
-def computeAdaptiveGaps(
-    eigenvalues: NDArray[np.float64], windowSize: int, epsilon: float
+def compute_adaptive_gaps(
+    eigenvalues: NDArray[np.float64], window_size: int, epsilon: float
 ) -> NDArray[np.float64]:
     raise NotImplementedError
 
 
-def computeGapThreshold(gaps: NDArray[np.float64], epsilon: float) -> float:
+def compute_gap_threshold(gaps: NDArray[np.float64], epsilon: float) -> float:
     raise NotImplementedError

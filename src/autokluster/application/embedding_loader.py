@@ -4,17 +4,17 @@ import numpy as np
 from numpy.typing import NDArray
 
 
-def loadEmbeddings(path: Path | str) -> NDArray[np.float64]:
+def load_embeddings(path: Path | str) -> NDArray[np.float64]:
     raise NotImplementedError
 
 
-def loadNpy(path: Path) -> NDArray[np.float64]:
+def load_npy(path: Path) -> NDArray[np.float64]:
     raise NotImplementedError
 
 
-def loadCsv(path: Path) -> NDArray[np.float64]:
+def load_csv(path: Path) -> NDArray[np.float64]:
     raise NotImplementedError
 
 
-def loadParquet(path: Path) -> NDArray[np.float64]:
+def load_parquet(path: Path) -> NDArray[np.float64]:
     raise NotImplementedError

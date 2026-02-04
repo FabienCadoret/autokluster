@@ -5,11 +5,11 @@ from autokluster.application.clustering_service import ClusterResult, cluster
 
 
 class TestClusteringService:
-    def testClusterReturnsClusterResult(self, simpleBlobs):
+    def test_cluster_returns_cluster_result(self, simple_blobs):
         pass
 
-    def testClusterWithForcedK(self, simpleBlobs):
+    def test_cluster_with_forced_k(self, simple_blobs):
         pass
 
-    def testClusterAutoDetectsK(self, fiveClusterBlobs):
+    def test_cluster_auto_detects_k(self, five_cluster_blobs):
         pass

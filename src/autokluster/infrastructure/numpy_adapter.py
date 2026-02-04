@@ -3,7 +3,7 @@ from numpy.typing import NDArray
 from scipy import linalg
 
 
-def cosineSimilarity(
+def cosine_similarity(
     embeddings: NDArray[np.float64], epsilon: float = 1e-10
 ) -> NDArray[np.float64]:
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
@@ -13,13 +13,13 @@ def cosineSimilarity(
     return similarity
 
 
-def normalizedLaplacian(
-    similarityMatrix: NDArray[np.float64], epsilon: float = 1e-10
+def normalized_laplacian(
+    similarity_matrix: NDArray[np.float64], epsilon: float = 1e-10
 ) -> NDArray[np.float64]:
-    n = similarityMatrix.shape[0]
-    degrees = np.sum(similarityMatrix, axis=1)
-    dInvSqrt = 1.0 / np.sqrt(degrees + epsilon)
-    normalized = dInvSqrt[:, np.newaxis] * similarityMatrix * dInvSqrt[np.newaxis, :]
+    n = similarity_matrix.shape[0]
+    degrees = np.sum(similarity_matrix, axis=1)
+    d_inv_sqrt = 1.0 / np.sqrt(degrees + epsilon)
+    normalized = d_inv_sqrt[:, np.newaxis] * similarity_matrix * d_inv_sqrt[np.newaxis, :]
     laplacian = np.eye(n) - normalized
     return laplacian
 

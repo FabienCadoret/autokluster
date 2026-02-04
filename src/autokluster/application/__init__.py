@@ -1,3 +1,3 @@
-from autokluster.application.clustering_service import cluster, ClusterResult
+from autokluster.application.clustering_service import ClusterResult, cluster
 
 __all__ = ["cluster", "ClusterResult"]

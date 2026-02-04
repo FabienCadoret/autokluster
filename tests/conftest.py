@@ -4,7 +4,7 @@ from sklearn.datasets import make_blobs
 
 
 @pytest.fixture
-def simpleBlobs():
+def simple_blobs():
     embeddings, labels = make_blobs(
         n_samples=150, n_features=128, centers=3, random_state=42
     )
@@ -12,7 +12,7 @@ def simpleBlobs():
 
 
 @pytest.fixture
-def fiveClusterBlobs():
+def five_cluster_blobs():
     embeddings, labels = make_blobs(
         n_samples=250, n_features=128, centers=5, random_state=42
     )
@@ -20,6 +20,6 @@ def fiveClusterBlobs():
 
 
 @pytest.fixture
-def randomEmbeddings():
+def random_embeddings():
     rng = np.random.default_rng(42)
     return rng.random((100, 384)).astype(np.float64)
