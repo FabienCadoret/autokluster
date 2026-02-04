@@ -18,9 +18,9 @@
 - [x] `clusterEigenvectors` : sklearn KMeans sur les vecteurs propres normalisés
 
 ### 1.4 Domain (cohesion_ratio.py)
-- [ ] `computeGlobalMeanSimilarity` : μ_G = moyenne de toutes les paires
-- [ ] `computeIntraClusterMeanSimilarity` : μ_I = moyenne des paires intra-cluster
-- [ ] `computeCohesionRatio` : ρ_C = μ_I / μ_G
+- [x] `compute_global_mean_similarity` : μ_G = moyenne de toutes les paires
+- [x] `compute_intra_cluster_mean_similarity` : μ_I = moyenne des paires intra-cluster
+- [x] `compute_cohesion_ratio` : ρ_C = μ_I / μ_G
 
 ### 1.5 Application (embedding_loader.py)
 - [ ] `loadNpy` : charge et valide format numpy
