@@ -12,10 +12,10 @@
 - [x] `readNpy` : chargement fichiers .npy
 
 ### 1.3 Domain (spectral_clustering.py)
-- [ ] `computeSimilarityMatrix` : utilise cosineSimilarity, clip valeurs négatives à 0
-- [ ] `computeNormalizedLaplacian` : utilise normalizedLaplacian
-- [ ] `computeEigendecomposition` : utilise eigendecomposition, retourne SpectralResult
-- [ ] `clusterEigenvectors` : sklearn KMeans sur les vecteurs propres normalisés
+- [x] `computeSimilarityMatrix` : utilise cosineSimilarity, clip valeurs négatives à 0
+- [x] `computeNormalizedLaplacian` : utilise normalizedLaplacian
+- [x] `computeEigendecomposition` : utilise eigendecomposition, retourne SpectralResult
+- [x] `clusterEigenvectors` : sklearn KMeans sur les vecteurs propres normalisés
 
 ### 1.4 Domain (cohesion_ratio.py)
 - [ ] `computeGlobalMeanSimilarity` : μ_G = moyenne de toutes les paires
