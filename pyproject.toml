@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autokluster"
+version = "0.1.0"
+description = "Automatic text embedding clustering with eigen-gap k estimation and Cohesion Ratio metric"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Fabien Cadoret" }
+]
+keywords = ["clustering", "embeddings", "spectral-clustering", "nlp", "machine-learning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "click>=8.0",
+]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers>=2.2"]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1",
+]
+
+[project.scripts]
+autokluster = "autokluster.exposition.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/fabiencadoret/autokluster"
+Repository = "https://github.com/fabiencadoret/autokluster"
+Issues = "https://github.com/fabiencadoret/autokluster/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autokluster"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
