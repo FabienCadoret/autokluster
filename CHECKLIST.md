@@ -23,8 +23,8 @@
 - [x] `compute_cohesion_ratio` : ρ_C = μ_I / μ_G
 
 ### 1.5 Application (embedding_loader.py)
-- [ ] `loadNpy` : charge et valide format numpy
-- [ ] `loadEmbeddings` : détecte extension, dispatch vers le bon loader
+- [x] `load_npy` : charge et valide format numpy (2D, float64)
+- [x] `load_embeddings` : détecte extension, dispatch vers le bon loader
 
 ### 1.6 Application (clustering_service.py)
 - [ ] `cluster` : orchestration complète avec k fixe
