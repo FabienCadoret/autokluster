@@ -8,8 +8,8 @@
 - [x] `eigendecomposition` : scipy.linalg.eigh pour les k plus petites valeurs propres
 
 ### 1.2 Infrastructure (file_adapter.py)
-- [ ] `writeJson` : sérialisation JSON avec gestion numpy arrays
-- [ ] `readNpy` : chargement fichiers .npy
+- [x] `writeJson` : sérialisation JSON avec gestion numpy arrays
+- [x] `readNpy` : chargement fichiers .npy
 
 ### 1.3 Domain (spectral_clustering.py)
 - [ ] `computeSimilarityMatrix` : utilise cosineSimilarity, clip valeurs négatives à 0
