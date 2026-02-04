@@ -27,7 +27,7 @@
 - [x] `load_embeddings` : détecte extension, dispatch vers le bon loader
 
 ### 1.6 Application (clustering_service.py)
-- [ ] `cluster` : orchestration complète avec k fixe
+- [x] `cluster` : orchestration complète avec k fixe
   - Calcul similarité → Laplacien → Eigendecomposition → KMeans → Cohesion Ratio
   - Retourne ClusterResult complet
 
