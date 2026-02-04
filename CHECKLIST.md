@@ -32,15 +32,15 @@
   - Retourne ClusterResult complet
 
 ### 1.7 Exposition (cli.py)
-- [ ] `main` : charge embeddings, appelle cluster, écrit JSON
-- [ ] Support --format standard/detailed
+- [x] `main` : charge embeddings, appelle cluster, écrit JSON
+- [x] Support --format standard/detailed
 
 ### 1.8 Tests Phase 1
-- [ ] Tests unitaires numpy_adapter (3 fonctions)
-- [ ] Tests unitaires spectral_clustering (4 méthodes)
-- [ ] Tests unitaires cohesion_ratio (3 fonctions)
-- [ ] Tests intégration clustering_service avec blobs synthétiques
-- [ ] Test CLI avec fichier npy temporaire
+- [x] Tests unitaires numpy_adapter (3 fonctions)
+- [x] Tests unitaires spectral_clustering (4 méthodes)
+- [x] Tests unitaires cohesion_ratio (3 fonctions)
+- [x] Tests intégration clustering_service avec blobs synthétiques
+- [x] Test CLI avec fichier npy temporaire
 
 ---
 
