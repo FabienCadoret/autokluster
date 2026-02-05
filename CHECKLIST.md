@@ -65,9 +65,9 @@
 - [x] Mettre à jour `loadEmbeddings` pour les nouveaux formats
 
 ### 2.5 Domain (échantillonnage adaptatif)
-- [ ] Créer `adaptive_sampling.py` si n > 1000
-- [ ] Implémenter n_replicates = log₂(n) × 10 sous-échantillons
-- [ ] Agrégation des résultats
+- [x] Créer `adaptive_sampling.py` si n > 1000
+- [x] Implémenter n_replicates = log₂(n) × 10 sous-échantillons
+- [x] Agrégation des résultats
 
 ### 2.6 Tests Phase 2
 - [ ] Tests eigen_gap avec eigenvalues synthétiques connues

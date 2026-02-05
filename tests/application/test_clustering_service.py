@@ -146,3 +146,56 @@ class TestClusteringService:
         assert result.n_samples == 250
         assert sum(result.cluster_sizes) == 250
         assert result.cohesion_ratio > 1.0
+
+
+class TestClusteringServiceSampling:
+    def test_large_dataset_uses_sampling(self, large_blobs):
+        embeddings, _ = large_blobs
+        result = cluster(embeddings, k=None, random_state=42)
+
+        assert result.sampled is True
+        assert result.n_samples == 1500
+        assert result.k >= 2
+        assert result.labels.shape == (1500,)
+        assert sum(result.cluster_sizes) == 1500
+
+    def test_small_dataset_no_sampling(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=3, random_state=42)
+
+        assert result.sampled is False
+
+    def test_sampling_with_forced_k(self, large_blobs):
+        embeddings, _ = large_blobs
+        result = cluster(embeddings, k=5, random_state=42)
+
+        assert result.sampled is True
+        assert result.k == 5
+        assert result.eigengap_index is None
+
+    def test_sampling_reproducible(self, large_blobs):
+        embeddings, _ = large_blobs
+        result1 = cluster(embeddings, k=None, random_state=42)
+        result2 = cluster(embeddings, k=None, random_state=42)
+
+        assert result1.k == result2.k
+        np.testing.assert_array_equal(result1.labels, result2.labels)
+
+    def test_sampling_cohesion_ratio_positive(self, large_blobs):
+        embeddings, _ = large_blobs
+        result = cluster(embeddings, k=None, random_state=42)
+
+        assert result.cohesion_ratio > 1.0
+
+    def test_sampling_labels_dtype(self, large_blobs):
+        embeddings, _ = large_blobs
+        result = cluster(embeddings, k=None, random_state=42)
+
+        assert result.labels.dtype == np.int64
+
+    def test_custom_sampling_threshold(self, five_cluster_blobs):
+        embeddings, _ = five_cluster_blobs
+        result = cluster(embeddings, k=None, sampling_threshold=100, random_state=42)
+
+        assert result.sampled is True
+        assert result.n_samples == 250
