@@ -56,8 +56,8 @@
 - [x] Ajouter eigengapIndex dans ClusterResult
 
 ### 2.3 Infrastructure (file_adapter.py)
-- [ ] `readCsv` : pandas ou numpy.loadtxt
-- [ ] `readParquet` : pyarrow ou pandas
+- [x] `readCsv` : numpy.loadtxt
+- [x] `readParquet` : pyarrow
 
 ### 2.4 Application (embedding_loader.py)
 - [ ] `loadCsv` : support fichiers CSV

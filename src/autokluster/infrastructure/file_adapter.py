@@ -30,8 +30,12 @@ def read_npy(path: Path) -> np.ndarray:
 
 
 def read_csv(path: Path) -> np.ndarray:
-    raise NotImplementedError
+    return np.loadtxt(path, delimiter=",", skiprows=1)
 
 
 def read_parquet(path: Path) -> np.ndarray:
-    raise NotImplementedError
+    import pyarrow.parquet as pq
+
+    table = pq.read_table(path)
+    columns = [column.to_numpy(zero_copy_only=False) for column in table.columns]
+    return np.column_stack(columns)

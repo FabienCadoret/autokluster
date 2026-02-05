@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pytest
 
-from autokluster.infrastructure.file_adapter import read_npy, write_json
+from autokluster.infrastructure.file_adapter import read_csv, read_npy, read_parquet, write_json
 
 
 class TestReadNpy:
@@ -28,6 +28,74 @@ class TestReadNpy:
     def test_raises_on_missing_file(self, tmp_path):
         with pytest.raises(FileNotFoundError):
             read_npy(tmp_path / "nonexistent.npy")
+
+
+class TestReadCsv:
+    def test_loads_csv_with_header(self, tmp_path):
+        file_path = tmp_path / "test.csv"
+        file_path.write_text("dim0,dim1,dim2\n1.0,2.0,3.0\n4.0,5.0,6.0\n")
+
+        result = read_csv(file_path)
+
+        expected = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        np.testing.assert_array_equal(result, expected)
+
+    def test_returns_2d_array(self, tmp_path):
+        file_path = tmp_path / "test.csv"
+        file_path.write_text("a,b\n1.0,2.0\n3.0,4.0\n5.0,6.0\n")
+
+        result = read_csv(file_path)
+
+        assert result.ndim == 2
+        assert result.shape == (3, 2)
+
+    def test_dtype_is_float64(self, tmp_path):
+        file_path = tmp_path / "test.csv"
+        file_path.write_text("x,y\n1,2\n3,4\n")
+
+        result = read_csv(file_path)
+
+        assert result.dtype == np.float64
+
+    def test_raises_on_missing_file(self, tmp_path):
+        with pytest.raises((FileNotFoundError, OSError)):
+            read_csv(tmp_path / "nonexistent.csv")
+
+
+class TestReadParquet:
+    @pytest.fixture(autouse=True)
+    def _require_pyarrow(self):
+        pytest.importorskip("pyarrow")
+
+    def test_loads_parquet(self, tmp_path):
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+
+        expected = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        table = pa.table({"dim0": expected[:, 0], "dim1": expected[:, 1], "dim2": expected[:, 2]})
+        file_path = tmp_path / "test.parquet"
+        pq.write_table(table, file_path)
+
+        result = read_parquet(file_path)
+
+        np.testing.assert_array_almost_equal(result, expected)
+
+    def test_returns_2d_array(self, tmp_path):
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+
+        table = pa.table({"a": [1.0, 3.0], "b": [2.0, 4.0]})
+        file_path = tmp_path / "test.parquet"
+        pq.write_table(table, file_path)
+
+        result = read_parquet(file_path)
+
+        assert result.ndim == 2
+        assert result.shape == (2, 2)
+
+    def test_raises_on_missing_file(self, tmp_path):
+        with pytest.raises((FileNotFoundError, OSError)):
+            read_parquet(tmp_path / "nonexistent.parquet")
 
 
 class TestWriteJson:
