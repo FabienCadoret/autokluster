@@ -193,6 +193,14 @@ class TestClusteringServiceSampling:
 
         assert result.labels.dtype == np.int64
 
+    def test_sampling_auto_detection_sets_eigengap_index(self, large_blobs):
+        embeddings, _ = large_blobs
+        result = cluster(embeddings, k=None, random_state=42)
+
+        assert result.sampled is True
+        assert result.eigengap_index is not None
+        assert result.eigengap_index == result.k
+
     def test_custom_sampling_threshold(self, five_cluster_blobs):
         embeddings, _ = five_cluster_blobs
         result = cluster(embeddings, k=None, sampling_threshold=100, random_state=42)

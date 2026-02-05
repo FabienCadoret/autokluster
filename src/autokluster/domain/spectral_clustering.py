@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from autokluster.infrastructure.numpy_adapter import (
     cosine_similarity,
     eigendecomposition,
+    noise_eigendecomposition,
     normalized_laplacian,
 )
 
@@ -37,6 +38,12 @@ class SpectralClusterer:
         return SpectralResult(
             eigenvalues=eigenvalues, eigenvectors=eigenvectors, laplacian=laplacian
         )
+
+    def compute_noise_eigenvalues(
+        self, laplacian: NDArray[np.float64], noise_k: int = 20
+    ) -> NDArray[np.float64]:
+        n = laplacian.shape[0]
+        return noise_eigendecomposition(laplacian, n, noise_k)
 
     def cluster_eigenvectors(
         self, eigenvectors: NDArray[np.float64], k: int, random_state: int | None = None

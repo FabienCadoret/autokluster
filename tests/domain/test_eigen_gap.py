@@ -155,3 +155,73 @@ class TestFindOptimalK:
         k = find_optimal_k(spectral_result.eigenvalues, min_k=2, max_k=20)
         assert 2 <= k <= 20
         assert abs(k - 5) <= 2
+
+    def test_integration_three_clusters_with_noise(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        clusterer = SpectralClusterer()
+        similarity = clusterer.compute_similarity_matrix(embeddings)
+        laplacian = clusterer.compute_normalized_laplacian(similarity)
+        spectral_result = clusterer.compute_eigendecomposition(laplacian, max_k=20)
+        noise_eigenvalues = clusterer.compute_noise_eigenvalues(laplacian)
+
+        k = find_optimal_k(
+            spectral_result.eigenvalues,
+            min_k=2,
+            max_k=20,
+            noise_eigenvalues=noise_eigenvalues,
+        )
+        assert 2 <= k <= 20
+        assert abs(k - 3) <= 1
+
+    def test_integration_five_clusters_with_noise(self, five_cluster_blobs):
+        embeddings, _ = five_cluster_blobs
+        clusterer = SpectralClusterer()
+        similarity = clusterer.compute_similarity_matrix(embeddings)
+        laplacian = clusterer.compute_normalized_laplacian(similarity)
+        spectral_result = clusterer.compute_eigendecomposition(laplacian, max_k=20)
+        noise_eigenvalues = clusterer.compute_noise_eigenvalues(laplacian)
+
+        k = find_optimal_k(
+            spectral_result.eigenvalues,
+            min_k=2,
+            max_k=20,
+            noise_eigenvalues=noise_eigenvalues,
+        )
+        assert 2 <= k <= 20
+        assert abs(k - 5) <= 3
+
+
+class TestFindOptimalKWithNoiseThreshold:
+    def test_noise_threshold_detects_gap(self):
+        signal = np.array([0.0, 0.001, 0.002, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+        noise = np.array([0.95, 0.96, 0.97, 0.98, 0.99, 1.0])
+        k = find_optimal_k(signal, min_k=2, max_k=8, noise_eigenvalues=noise)
+        assert k == 3
+
+    def test_backward_compatible_without_noise(self):
+        eigenvalues = np.array([0.0, 0.001, 0.002, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+        k_old = find_optimal_k(eigenvalues, min_k=2, max_k=8)
+        k_none = find_optimal_k(eigenvalues, min_k=2, max_k=8, noise_eigenvalues=None)
+        assert k_old == k_none
+
+    def test_synthetic_spectrum_five_clusters(self):
+        signal = np.concatenate([
+            np.linspace(0.0, 0.04, 5),
+            np.linspace(0.8, 1.0, 10),
+        ])
+        noise = np.linspace(0.9, 1.0, 20)
+        k = find_optimal_k(signal, min_k=2, max_k=14, noise_eigenvalues=noise)
+        assert k == 5
+
+    def test_single_noise_eigenvalue_falls_back(self):
+        eigenvalues = np.array([0.0, 0.001, 0.5, 0.8, 1.0])
+        noise = np.array([1.0])
+        k_with_noise = find_optimal_k(eigenvalues, min_k=2, max_k=4, noise_eigenvalues=noise)
+        k_without = find_optimal_k(eigenvalues, min_k=2, max_k=4)
+        assert k_with_noise == k_without
+
+    def test_uniform_noise_zero_threshold(self):
+        eigenvalues = np.array([0.0, 0.001, 0.002, 0.5, 0.6, 0.7])
+        noise = np.ones(10, dtype=np.float64)
+        k = find_optimal_k(eigenvalues, min_k=2, max_k=5, noise_eigenvalues=noise)
+        assert 2 <= k <= 5

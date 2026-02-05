@@ -2,6 +2,8 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy import linalg
 
+NOISE_EIGENVALUES_COUNT = 20
+
 
 def cosine_similarity(
     embeddings: NDArray[np.float64], epsilon: float = 1e-10
@@ -29,3 +31,12 @@ def eigendecomposition(
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     eigenvalues, eigenvectors = linalg.eigh(matrix, subset_by_index=(0, k - 1))
     return eigenvalues, eigenvectors
+
+
+def noise_eigendecomposition(
+    matrix: NDArray[np.float64], n: int, noise_k: int = NOISE_EIGENVALUES_COUNT
+) -> NDArray[np.float64]:
+    effective_noise_k = min(noise_k, n)
+    start_index = n - effective_noise_k
+    eigenvalues, _ = linalg.eigh(matrix, subset_by_index=(start_index, n - 1))
+    return eigenvalues

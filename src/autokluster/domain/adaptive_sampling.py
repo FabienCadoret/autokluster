@@ -17,7 +17,7 @@ def create_subsample_indices(
 
 
 def aggregate_k_estimates(k_estimates: list[int]) -> int:
-    return int(np.median(k_estimates))
+    return int(np.round(np.mean(k_estimates)))
 
 
 def assign_remaining_labels(

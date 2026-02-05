@@ -139,6 +139,7 @@ autokluster/
 - **μ_I** = moyenne intra-cluster : `1/P × Σ_k Σ_(i,j∈C_k) S_ij`
 - ρ_C = 1 → cohésion égale au bruit de fond (mauvais)
 - ρ_C > 1 → clusters cohérents (bon)
+- Quand `sampled=true` (n > τ), ρ_C est calculé sur le sous-échantillon spectral (τ points). L'échantillon aléatoire est statistiquement représentatif du dataset complet.
 
 ### Laplacien normalisé
 
@@ -166,7 +167,7 @@ k = premier i où δ_i > E[δ] × (1 + σ[δ]/E[δ] + ε)
 
 | Paramètre | Type | Défaut | Description |
 |-----------|------|--------|-------------|
-| `window_size` | int | 5 | Fenêtre glissante (w) pour eigen-gap |
+| `window_size` | int | 3 | Fenêtre glissante (w) pour eigen-gap |
 | `epsilon` | float | 1e-10 | Stabilité numérique (ε) |
 | `k` | int \| None | None | Forcer k (None = auto via eigen-gap) |
 | `min_k` | int | 2 | Nombre minimum de clusters |

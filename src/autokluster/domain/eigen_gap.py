@@ -39,6 +39,7 @@ def find_optimal_k(
     max_k: int = 50,
     window_size: int = 3,
     epsilon: float = 1e-10,
+    noise_eigenvalues: NDArray[np.float64] | None = None,
 ) -> int:
     effective_max_k = min(max_k, len(eigenvalues) - 1)
 
@@ -50,8 +51,17 @@ def find_optimal_k(
     search_start = min_k - 1
     search_end = effective_max_k
     search_gaps = gaps[search_start:search_end]
-    threshold = compute_gap_threshold(search_gaps, epsilon)
 
+    if noise_eigenvalues is not None and len(noise_eigenvalues) >= 2:
+        noise_gaps = compute_adaptive_gaps(noise_eigenvalues, window_size, epsilon)
+        threshold = compute_gap_threshold(noise_gaps, epsilon)
+        candidates = np.nonzero(search_gaps > threshold)[0]
+        if len(candidates) == 0:
+            return max(min_k, min(DEFAULT_K, effective_max_k))
+        best = int(np.argmax(search_gaps[candidates]))
+        return search_start + int(candidates[best]) + 1
+
+    threshold = compute_gap_threshold(search_gaps, epsilon)
     candidates = np.nonzero(search_gaps > threshold)[0]
     if len(candidates) == 0:
         return max(min_k, min(DEFAULT_K, effective_max_k))

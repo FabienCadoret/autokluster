@@ -3,6 +3,7 @@ import numpy as np
 from autokluster.infrastructure.numpy_adapter import (
     cosine_similarity,
     eigendecomposition,
+    noise_eigendecomposition,
     normalized_laplacian,
 )
 
@@ -94,3 +95,43 @@ class TestEigendecomposition:
         _, eigenvectors = eigendecomposition(laplacian, k)
         product = eigenvectors.T @ eigenvectors
         np.testing.assert_allclose(product, np.eye(k), atol=1e-10)
+
+
+class TestNoiseEigendecomposition:
+    def test_shape(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        similarity = cosine_similarity(embeddings)
+        laplacian = normalized_laplacian(similarity)
+        n = laplacian.shape[0]
+        noise_eigs = noise_eigendecomposition(laplacian, n, noise_k=20)
+        assert noise_eigs.shape == (20,)
+
+    def test_sorted_ascending(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        similarity = cosine_similarity(embeddings)
+        laplacian = normalized_laplacian(similarity)
+        n = laplacian.shape[0]
+        noise_eigs = noise_eigendecomposition(laplacian, n, noise_k=20)
+        assert np.all(np.diff(noise_eigs) >= -1e-10)
+
+    def test_noise_near_one_for_normalized_laplacian(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        similarity = cosine_similarity(embeddings)
+        laplacian = normalized_laplacian(similarity)
+        n = laplacian.shape[0]
+        noise_eigs = noise_eigendecomposition(laplacian, n, noise_k=10)
+        assert np.all(noise_eigs > 0.5)
+
+    def test_small_matrix_caps_noise_k(self):
+        matrix = np.eye(5, dtype=np.float64)
+        noise_eigs = noise_eigendecomposition(matrix, 5, noise_k=20)
+        assert noise_eigs.shape == (5,)
+
+    def test_noise_greater_than_signal(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        similarity = cosine_similarity(embeddings)
+        laplacian = normalized_laplacian(similarity)
+        n = laplacian.shape[0]
+        signal_eigs, _ = eigendecomposition(laplacian, 20)
+        noise_eigs = noise_eigendecomposition(laplacian, n, noise_k=20)
+        assert noise_eigs[-1] >= signal_eigs[-1]

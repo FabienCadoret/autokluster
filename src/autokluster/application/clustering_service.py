@@ -44,16 +44,16 @@ def _cluster_subset(
     if k is None:
         effective_max_k = min(max_k, n_samples - 1)
         if effective_max_k < min_k:
-            raise ValueError(
-                f"n_samples ({n_samples}) too small for min_k ({min_k})"
-            )
+            raise ValueError(f"n_samples ({n_samples}) too small for min_k ({min_k})")
         spectral_result = clusterer.compute_eigendecomposition(laplacian, effective_max_k)
+        noise_eigenvalues = clusterer.compute_noise_eigenvalues(laplacian)
         detected_k = find_optimal_k(
             spectral_result.eigenvalues,
             min_k=min_k,
             max_k=max_k,
             window_size=window_size,
             epsilon=epsilon,
+            noise_eigenvalues=noise_eigenvalues,
         )
         labels = clusterer.cluster_eigenvectors(
             spectral_result.eigenvectors[:, :detected_k], detected_k, random_state
@@ -65,9 +65,7 @@ def _cluster_subset(
         if k > n_samples - 1:
             raise ValueError(f"k must be <= n_samples - 1 ({n_samples - 1})")
         spectral_result = clusterer.compute_eigendecomposition(laplacian, k)
-        labels = clusterer.cluster_eigenvectors(
-            spectral_result.eigenvectors, k, random_state
-        )
+        labels = clusterer.cluster_eigenvectors(spectral_result.eigenvectors, k, random_state)
         return labels, k, None, spectral_result.eigenvalues, similarity_matrix
 
 
@@ -76,7 +74,7 @@ def cluster(
     k: int | None = None,
     min_k: int = 2,
     max_k: int = 50,
-    window_size: int = 5,
+    window_size: int = 3,
     epsilon: float = 1e-10,
     random_state: int | None = None,
     sampling_threshold: int = SAMPLING_THRESHOLD,
@@ -134,14 +132,16 @@ def _cluster_with_sampling(
             k_estimates.append(detected_k)
 
         final_k = aggregate_k_estimates(k_estimates)
+        detected_eigengap = final_k
     else:
         final_k = k
+        detected_eigengap = None
 
     final_indices = create_subsample_indices(n_samples, sampling_threshold, rng)
     final_sub_embeddings = embeddings[final_indices]
     final_seed = int(rng.integers(0, 2**31))
 
-    sample_labels, _, eigengap_index, eigenvalues, similarity_matrix = _cluster_subset(
+    sample_labels, _, _, eigenvalues, similarity_matrix = _cluster_subset(
         final_sub_embeddings, final_k, min_k, max_k, window_size, epsilon, final_seed
     )
 
@@ -155,7 +155,7 @@ def _cluster_with_sampling(
         labels=labels,
         cohesion_ratio=cohesion,
         eigenvalues=eigenvalues,
-        eigengap_index=eigengap_index if k is None else None,
+        eigengap_index=detected_eigengap,
         cluster_sizes=counts.tolist(),
         n_samples=n_samples,
         sampled=True,

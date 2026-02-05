@@ -55,7 +55,7 @@ class TestCreateSubsampleIndices:
 
 
 class TestAggregateKEstimates:
-    def test_returns_median(self):
+    def test_returns_mean(self):
         assert aggregate_k_estimates([3, 5, 7]) == 5
 
     def test_even_number_of_estimates(self):
@@ -66,6 +66,9 @@ class TestAggregateKEstimates:
 
     def test_returns_int(self):
         assert isinstance(aggregate_k_estimates([3, 5, 7]), int)
+
+    def test_mean_differs_from_median(self):
+        assert aggregate_k_estimates([2, 2, 2, 10]) == 4
 
 
 class TestAssignRemainingLabels:
