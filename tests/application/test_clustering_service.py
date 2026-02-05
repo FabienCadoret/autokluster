@@ -30,9 +30,58 @@ class TestClusteringService:
 
     def test_cluster_auto_detects_k(self, five_cluster_blobs):
         embeddings, _ = five_cluster_blobs
+        result = cluster(embeddings, k=None, random_state=42)
 
-        with pytest.raises(ValueError, match="k must be provided"):
-            cluster(embeddings, k=None)
+        assert isinstance(result, ClusterResult)
+        assert result.k >= 2
+        assert result.eigengap_index is not None
+        assert result.eigengap_index == result.k
+        assert result.labels.shape == (250,)
+        assert sum(result.cluster_sizes) == 250
+
+    def test_cluster_auto_detects_k_near_expected(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=None, random_state=42)
+
+        assert abs(result.k - 3) <= 2
+
+    def test_cluster_auto_detection_returns_more_eigenvalues(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=None, max_k=20, random_state=42)
+
+        assert len(result.eigenvalues) == 20
+
+    def test_cluster_auto_detection_cohesion_ratio_positive(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=None, random_state=42)
+
+        assert result.cohesion_ratio > 1.0
+
+    def test_cluster_forced_k_eigengap_index_is_none(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=3, random_state=42)
+
+        assert result.eigengap_index is None
+
+    def test_cluster_auto_detection_respects_min_k(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=None, min_k=4, random_state=42)
+
+        assert result.k >= 4
+
+    def test_cluster_auto_detection_respects_max_k(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result = cluster(embeddings, k=None, max_k=3, random_state=42)
+
+        assert result.k <= 3
+
+    def test_cluster_auto_detection_reproducible(self, simple_blobs):
+        embeddings, _ = simple_blobs
+        result1 = cluster(embeddings, k=None, random_state=42)
+        result2 = cluster(embeddings, k=None, random_state=42)
+
+        assert result1.k == result2.k
+        np.testing.assert_array_equal(result1.labels, result2.labels)
 
     def test_cluster_cohesion_ratio_greater_than_one(self, simple_blobs):
         embeddings, _ = simple_blobs

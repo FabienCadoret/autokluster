@@ -52,8 +52,8 @@
 - [x] `findOptimalK` : premier i où δ_i > seuil, avec min_k/max_k
 
 ### 2.2 Application (clustering_service.py)
-- [ ] Modifier `cluster` : si k=None, appeler eigen-gap pour déterminer k automatiquement
-- [ ] Ajouter eigengapIndex dans ClusterResult
+- [x] Modifier `cluster` : si k=None, appeler eigen-gap pour déterminer k automatiquement
+- [x] Ajouter eigengapIndex dans ClusterResult
 
 ### 2.3 Infrastructure (file_adapter.py)
 - [ ] `readCsv` : pandas ou numpy.loadtxt
