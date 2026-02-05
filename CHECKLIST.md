@@ -47,9 +47,9 @@
 ## Phase 2 - v1.0
 
 ### 2.1 Domain (eigen_gap.py)
-- [ ] `computeAdaptiveGaps` : δ_i = |λ_i - λ_(i-1)| / moyenne_fenêtre
-- [ ] `computeGapThreshold` : seuil data-driven E[δ] × (1 + σ[δ]/E[δ] + ε)
-- [ ] `findOptimalK` : premier i où δ_i > seuil, avec min_k/max_k
+- [x] `computeAdaptiveGaps` : δ_i = |λ_i - λ_(i-1)| / moyenne_fenêtre
+- [x] `computeGapThreshold` : seuil data-driven E[δ] × (1 + σ[δ]/E[δ] + ε)
+- [x] `findOptimalK` : premier i où δ_i > seuil, avec min_k/max_k
 
 ### 2.2 Application (clustering_service.py)
 - [ ] Modifier `cluster` : si k=None, appeler eigen-gap pour déterminer k automatiquement
