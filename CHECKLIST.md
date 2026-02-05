@@ -60,9 +60,9 @@
 - [x] `readParquet` : pyarrow
 
 ### 2.4 Application (embedding_loader.py)
-- [ ] `loadCsv` : support fichiers CSV
-- [ ] `loadParquet` : support fichiers Parquet
-- [ ] Mettre à jour `loadEmbeddings` pour les nouveaux formats
+- [x] `loadCsv` : support fichiers CSV
+- [x] `loadParquet` : support fichiers Parquet
+- [x] Mettre à jour `loadEmbeddings` pour les nouveaux formats
 
 ### 2.5 Domain (échantillonnage adaptatif)
 - [ ] Créer `adaptive_sampling.py` si n > 1000
