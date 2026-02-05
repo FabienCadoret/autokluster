@@ -27,14 +27,17 @@ def compute_gap_threshold(gaps: NDArray[np.float64], epsilon: float) -> float:
 
     mean_gap = float(np.mean(gaps))
     std_gap = float(np.std(gaps))
-    return mean_gap * (1.0 + std_gap / (mean_gap + epsilon) + epsilon)
+    return mean_gap * (1.0 + std_gap / (mean_gap + epsilon))
+
+
+DEFAULT_K = 5
 
 
 def find_optimal_k(
     eigenvalues: NDArray[np.float64],
     min_k: int = 2,
     max_k: int = 50,
-    window_size: int = 5,
+    window_size: int = 3,
     epsilon: float = 1e-10,
 ) -> int:
     effective_max_k = min(max_k, len(eigenvalues) - 1)
@@ -51,9 +54,6 @@ def find_optimal_k(
 
     candidates = np.nonzero(search_gaps > threshold)[0]
     if len(candidates) == 0:
-        return min_k
+        return max(min_k, min(DEFAULT_K, effective_max_k))
 
-    diffs = np.abs(np.diff(eigenvalues))
-    search_diffs = diffs[search_start:search_end]
-    best = candidates[int(np.argmax(search_diffs[candidates]))]
-    return search_start + best + 1
+    return search_start + int(candidates[-1]) + 1
